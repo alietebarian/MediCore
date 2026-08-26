@@ -9,10 +9,22 @@ using Persistence;
 using Persistence.Identity;
 using Persistence.Services;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
@@ -71,6 +83,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -84,6 +102,8 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new IdentityRole<Guid>(role));
     }
 }
+
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
