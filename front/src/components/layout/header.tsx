@@ -13,12 +13,18 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuthStore } from "@/store/auth-store";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
-    // این‌ها Mock Data هستن فقط برای نمایش UI — بعداً از یک Session/Context واقعی میان
-    const mockUser = {
-        fullName: "کاربر نمونه",
-        role: "Doctor",
+    
+    const user = useAuthStore(s => s.user)
+    const router = useRouter()
+    const logout = useAuthStore((s) => s.logout);
+
+    const handleLogout = () => {
+        logout();
+        router.push("/login");
     };
 
     return (
@@ -34,18 +40,18 @@ export default function Header() {
                 <DropdownMenu>
                     <DropdownMenuTrigger className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-muted">
                         <Avatar className="h-8 w-8">
-                            <AvatarFallback>{mockUser.fullName.charAt(0)}</AvatarFallback>
+                            <AvatarFallback>{user?.fullName?.charAt(0) ?? "?"}</AvatarFallback>
                         </Avatar>
                         <div className="text-right text-sm">
-                            <p className="font-medium leading-none">{mockUser.fullName}</p>
-                            <p className="text-xs text-muted-foreground">{mockUser.role}</p>
+                            <p className="font-medium leading-none">{user?.fullName}</p>
+                            <p className="text-xs text-muted-foreground">{user?.role}</p>
                         </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem>پروفایل</DropdownMenuItem>
                         <DropdownMenuItem>تنظیمات</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive">خروج</DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive" onClick={handleLogout}>خروج</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
