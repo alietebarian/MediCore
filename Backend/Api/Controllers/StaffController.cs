@@ -1,4 +1,5 @@
-﻿using Application.Staff.Commands.CreateStaff;
+﻿using Application.Staff.Commands.CreateClinicStaff;
+using Application.Staff.Commands.CreateStaff;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,13 @@ public class StaffController : ControllerBase
     {
         await _mediator.Send(command);
 
+        return Created();
+    }
+
+    [HttpPost("clinic-staff")]
+    public async Task<IActionResult> CreateClinicStaff(CreateClinicStaffCommand command)
+    {
+        await _mediator.Send(command);
         return Created();
     }
 }
