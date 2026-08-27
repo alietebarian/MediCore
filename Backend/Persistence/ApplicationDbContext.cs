@@ -22,6 +22,8 @@ public class ApplicationDbContext
     public DbSet<PatientClinic> PatientClinics => Set<PatientClinic>();
     public DbSet<Specialty> Specialties => Set<Specialty>();
     public DbSet<ClinicStaff> ClinicStaff => Set<ClinicStaff>();
+    public DbSet<DoctorWorkingHour> DoctorWorkingHours => Set<DoctorWorkingHour>();
+    public DbSet<DoctorTimeOff> DoctorTimeOffs => Set<DoctorTimeOff>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -13,6 +13,8 @@ public interface IApplicationDbContext
     DbSet<PatientClinic> PatientClinics { get; }
     DbSet<Specialty> Specialties { get; }
     DbSet<ClinicStaff> ClinicStaff {  get; }
+    DbSet<DoctorWorkingHour> DoctorWorkingHours { get; }
+    DbSet<DoctorTimeOff> DoctorTimeOffs { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
