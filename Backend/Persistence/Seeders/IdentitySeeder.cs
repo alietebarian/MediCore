@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Application.Common.Interfaces;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Identity;
 
@@ -39,6 +41,18 @@ public static class IdentitySeeder
             {
                 await userManager.AddToRoleAsync(superAdmin, "SuperAdmin");
             }
+        }
+    }
+
+    public static async Task SeedSpecialtiesAsync(IApplicationDbContext context)
+    {
+        if (!context.Specialties.Any())
+        {
+            var specialties = new[] { "قلب و عروق", "پوست", "اطفال", "ارتوپدی", "داخلی", "زنان و زایمان" }
+                .Select(name => new Specialty { Name = name });
+
+            context.Specialties.AddRange(specialties);
+            await context.SaveChangesAsync(default);
         }
     }
 }

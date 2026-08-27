@@ -10,7 +10,7 @@ namespace Api.Controllers;
 
 [Route("api/clinics")]
 [ApiController]
-[Authorize(Roles = "SuperAdmin")]
+[Authorize]
 public class ClinicsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -21,6 +21,7 @@ public class ClinicsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> Create(CreateClinicCommand command)
     {
         var result = await _mediator.Send(command);
@@ -43,6 +44,7 @@ public class ClinicsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> Update(Guid id, UpdateClinicCommand command)
     {
         if (id != command.Id)

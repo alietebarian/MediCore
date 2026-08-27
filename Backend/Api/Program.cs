@@ -95,6 +95,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+    var dbContext = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+    await IdentitySeeder.SeedSpecialtiesAsync(dbContext);
 }
 
 using (var scope = app.Services.CreateScope())
