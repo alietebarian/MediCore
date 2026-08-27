@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Domain.Services;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +43,7 @@ builder.Services
 
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<DoctorAvailabilityService>();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Application.Auth.Commands.Register.RegisterCommand).Assembly));
