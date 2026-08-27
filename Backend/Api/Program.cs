@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Persistence;
 using Persistence.Identity;
+using Persistence.Seeders;
 using Persistence.Services;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -90,6 +91,11 @@ builder.Services.AddControllers()
     });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+}
 
 using (var scope = app.Services.CreateScope())
 {

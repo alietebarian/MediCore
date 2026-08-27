@@ -10,7 +10,7 @@ namespace Api.Controllers;
 
 [Route("api/clinics")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = "SuperAdmin")]
 public class ClinicsController : ControllerBase
 {
     private readonly IMediator _mediator;
