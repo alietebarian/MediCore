@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Doctors.Commands.CreateDoctorWorkingHour;
 
@@ -17,6 +18,17 @@ public class CreateDoctorWorkingHourCommandHandler : IRequestHandler<CreateDocto
     {
         if (request.StartTime >= request.EndTime)
             throw new InvalidOperationException("Start time must be before end time.");
+
+        var alreadyExists = await _context.DoctorWorkingHours
+            .AnyAsync(w =>
+                w.DoctorId == request.DoctorId &&
+                w.ClinicId == request.ClinicId &&
+                w.DayOfWeek == request.DayOfWeek,
+                cancellationToken);
+
+        if (alreadyExists)
+            throw new InvalidOperationException(
+                "A working hour for this doctor, clinic, and day of week already exists.");
 
         var workingHour = new DoctorWorkingHour
         {
