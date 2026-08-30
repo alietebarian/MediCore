@@ -1,8 +1,10 @@
 ﻿using Application.Doctors.Commands.CreateDoctorWorkingHour;
 using Application.Doctors.Queries.GetAvailableSlots;
+using Application.Doctors.Queries.GetMyDoctorProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllersک
 {
@@ -34,6 +36,17 @@ namespace Api.Controllersک
         {
             var id = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetAvailableSlots), new { doctorId = command.DoctorId }, new { id });
+        }
+
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized();
+
+            var result = await _mediator.Send(new GetMyDoctorProfileQuery(userId));
+            return result is null ? NotFound("No doctor profile found for this user.") : Ok(result);
         }
     }
 }
