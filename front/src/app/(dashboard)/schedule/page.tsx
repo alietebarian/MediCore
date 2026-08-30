@@ -10,16 +10,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createWorkingHourSchema, CreateWorkingHourFormValues } from "@/lib/validations/schedule";
 import { useCreateWorkingHour, useAvailableSlots } from "@/hooks/use-schedule";
 import { useClinicOptions } from "@/hooks/use-lookups";
-import { useAuthStore } from "@/store/auth-store";
 import { daysOfWeek, dayOfWeekLabels } from "@/types/schedule";
 import { formatDateFa, getNextDateForDayOfWeek } from "@/lib/date-utils";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import { useMyDoctorProfle } from "@/hooks/use-my-doctor-profile";
 
 export default function SchedulePage() {
-    const user = useAuthStore((s) => s.user);
-    const doctorId = "F6404387-351E-4033-8134-7C0BF9FF2C6E";
+    const { data: myProfile, isLoading: loadingProfile, isError: profileError } = useMyDoctorProfle()
+    const doctorId = myProfile?.id ?? ""
 
     const { data: clinics } = useClinicOptions();
     const { mutate, isPending, error } = useCreateWorkingHour(doctorId);
@@ -52,6 +52,18 @@ export default function SchedulePage() {
     const previewNextDate = selectedDayOfWeek
         ? formatDateFa(getNextDateForDayOfWeek(selectedDayOfWeek))
         : null;
+
+    if (loadingProfile) {
+        return <p className="text-muted-foreground">در حال بارگذاری پروفایل...</p>;
+    }
+
+    if (profileError || !myProfile) {
+        return (
+            <p className="text-destructive">
+                پروفایل پزشک برای این حساب کاربری یافت نشد. لطفاً با یک حساب Doctor وارد شوید.
+            </p>
+        );
+    }
 
     return (
         <div className="grid gap-6 md:grid-cols-2">
