@@ -5,6 +5,7 @@ public class Doctor
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
     public Guid SpecialtyId { get; set; }
+    public string FullName { get; set; } = null!;
     public string LicenseNumber { get; set; } = null!;
     public string? Bio { get; set; }
     public string? ProfileImageUrl { get; set; }

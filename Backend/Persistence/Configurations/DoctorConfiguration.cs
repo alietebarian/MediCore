@@ -16,6 +16,10 @@ public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
             .IsRequired()
             .HasMaxLength(50);
 
+        builder.Property(d => d.FullName)
+            .IsRequired()
+            .HasMaxLength(200);
+
         builder.Property(d => d.Bio)
             .HasMaxLength(2000);
 

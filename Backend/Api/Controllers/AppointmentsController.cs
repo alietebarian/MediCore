@@ -1,4 +1,5 @@
 ﻿using Application.Appointments.Commands.CreateAppointment;
+using Application.Appointments.Queries.GetAppointments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +23,12 @@ public class AppointmentsController : ControllerBase
     {
         var id = await _mediator.Send(command);
         return CreatedAtAction(nameof(Create), new { id }, new { id });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] GetAppointmentsQuery query)
+    {
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 }

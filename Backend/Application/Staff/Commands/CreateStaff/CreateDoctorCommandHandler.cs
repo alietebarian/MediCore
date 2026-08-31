@@ -27,6 +27,7 @@ public class CreateDoctorCommandHandler : IRequestHandler<CreateDoctorCommand>
             UserId = userId,
             SpecialtyId = request.SpecialtyId,
             LicenseNumber = request.LicenseNumber,
+            FullName = request.FullName,
         };
 
         _context.Doctors.Add(doctor);
