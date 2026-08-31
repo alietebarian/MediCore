@@ -16,7 +16,11 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddCors(options =>
 {
@@ -38,6 +42,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 builder.Services.AddScoped<IApplicationDbContext>(opt =>
     opt.GetRequiredService<ApplicationDbContext>()
 );
+
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -87,12 +92,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
-
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -100,18 +99,6 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
     var dbContext = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
     await IdentitySeeder.SeedSpecialtiesAsync(dbContext);
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-    string[] roles = { "SuperAdmin", "ClinicAdmin", "Doctor", "Receptionist", "Nurse", "Accountant", "Patient" };
-
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-    }
 }
 
 app.UseCors("AllowFrontend");
