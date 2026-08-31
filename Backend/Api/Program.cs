@@ -1,3 +1,4 @@
+using Api.Middleware;
 using Application.Common.Interfaces;
 using Domain.Services;
 using Infrastructure.Services;
@@ -120,6 +121,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
