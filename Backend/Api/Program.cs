@@ -1,5 +1,6 @@
 using Api.Middleware;
 using Application.Common.Interfaces;
+using Application.Common.Mappings;
 using Domain.Services;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,6 +54,7 @@ builder.Services.AddScoped<DoctorAvailabilityService>();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Application.Auth.Commands.Register.RegisterCommand).Assembly));
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
 builder.Services.AddAuthentication(options =>
 {
