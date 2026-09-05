@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useClinicOptions } from "@/hooks/use-lookups";
+import { useClinicOptions, useDoctorOptions } from "@/hooks/use-lookups";
 import { usePatients } from "@/hooks/use-patients";
 import { useAvailableSlots } from "@/hooks/use-schedule";
 import { useCreateAppointment } from "@/hooks/use-appointments";
@@ -14,15 +14,14 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 
-type DoctorOption = { id: string; name: string };
-
 export default function NewAppointmentPage() {
     const router = useRouter();
-    const { data: clinics } = useClinicOptions();
     const { data: patientsResult } = usePatients(1, 100);
-
+    
     const [doctorId, setDoctorId] = useState("");
     const [clinicId, setClinicId] = useState("");
+    const { data: clinics } = useClinicOptions();
+    const { data: doctors, isLoading: loadingDoctors } = useDoctorOptions(clinicId)
     const [patientId, setPatientId] = useState("");
     const [date, setDate] = useState("");
     const [selectedSlot, setSelectedSlot] = useState<{ startTime: string; endTime: string } | null>(null);
@@ -96,15 +95,26 @@ export default function NewAppointmentPage() {
                             </select>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="doctorId">شناسهٔ پزشک (موقت)</Label>
-                            {/* TODO: جایگزینی با یک Dropdown واقعی وقتی GetDoctorsQuery ساخته بشه */}
-                            <input
+                            <Label htmlFor="doctorId">پزشک</Label>
+                            <select
                                 id="doctorId"
                                 value={doctorId}
-                                onChange={(e) => setDoctorId(e.target.value)}
+                                onChange={(e) => {
+                                    setDoctorId(e.target.value);
+                                    setSelectedSlot(null); // با تغییر پزشک، انتخاب قبلی زمان بی‌اعتبار میشه
+                                }}
+                                disabled={!clinicId || loadingDoctors}
                                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                                placeholder="Doctor Id را موقتاً دستی وارد کنید"
-                            />
+                            >
+                                <option value="">
+                                    {!clinicId ? "ابتدا کلینیک را انتخاب کنید" : loadingDoctors ? "در حال بارگذاری..." : "انتخاب کنید"}
+                                </option>
+                                {doctors?.map((d) => (
+                                    <option key={d.id} value={d.id}>
+                                        {d.fullName} — {d.specialtyName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 

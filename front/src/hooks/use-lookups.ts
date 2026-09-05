@@ -31,3 +31,16 @@ export function useClinicOptions() {
     },
   });
 }
+
+export function useDoctorOptions(clinicId?: string) {
+  return useQuery({
+    queryKey: ["doctors", "options", clinicId],
+    queryFn: async () => {
+      const { data } = await apiClient.get<
+        { id: string; fullName: string; specialtyName: string }[]
+      >("/doctors", { params: clinicId ? { clinicId } : {} });
+      return data;
+    },
+    enabled: Boolean(clinicId),
+  });
+}
