@@ -1,5 +1,6 @@
 ﻿using Application.Doctors.Commands.CreateDoctorWorkingHour;
 using Application.Doctors.Queries.GetAvailableSlots;
+using Application.Doctors.Queries.GetDoctors;
 using Application.Doctors.Queries.GetMyDoctorProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -47,6 +48,13 @@ namespace Api.Controllersک
 
             var result = await _mediator.Send(new GetMyDoctorProfileQuery(userId));
             return result is null ? NotFound("No doctor profile found for this user.") : Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] GetDoctorsQuery query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
     }
 }
