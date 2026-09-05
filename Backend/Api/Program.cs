@@ -44,6 +44,8 @@ builder.Services.AddScoped<IApplicationDbContext>(opt =>
     opt.GetRequiredService<ApplicationDbContext>()
 );
 
+builder.Services.AddScoped<AppointmentStatusTransitionService>();
+
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>();

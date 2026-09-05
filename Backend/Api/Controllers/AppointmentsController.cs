@@ -1,5 +1,9 @@
 ﻿using Application.Appointments.Commands.CreateAppointment;
+using Application.Appointments.Commands.UpdateAppointmentStatus;
 using Application.Appointments.Queries.GetAppointments;
+
+//using Application.Commands.UpdateAppointmentStatus;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,5 +34,12 @@ public class AppointmentsController : ControllerBase
     {
         var result = await _mediator.Send(query);
         return Ok(result);
+    }
+
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] AppointmentStatus newStatus)
+    {
+        await _mediator.Send(new UpdateAppointmentStatusCommand(id, newStatus));
+        return NoContent();
     }
 }
