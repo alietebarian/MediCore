@@ -1,4 +1,5 @@
-﻿using Application.Patients.Commands.AddPatientAllergy;
+﻿using Application.MedicalRecords.Queries.GetMedicalRecordsByPatient;
+using Application.Patients.Commands.AddPatientAllergy;
 using Application.Patients.Commands.RemovePatientAllergy;
 using Application.Patients.Queries.GetPatientById;
 using Application.Patients.Queries.GetPatients;
@@ -47,6 +48,13 @@ public class PatientsController : ControllerBase
     {
         await _mediator.Send(new RemovePatientAllergyCommand(allergyId));
         return NoContent();
+    }
+
+    [HttpGet("{patientId:guid}/medical-records")]
+    public async Task<IActionResult> GetMedicalRecords(Guid patientId)
+    {
+        var result = await _mediator.Send(new GetMedicalRecordsByPatientQuery(patientId));
+        return Ok(result);
     }
 
     public record AddAllergyRequest(string AllergyName, string? Severity, string? Notes);
