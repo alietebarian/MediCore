@@ -36,6 +36,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { usePatientDetail, useAddAllergy, useRemoveAllergy } from "@/hooks/use-patients";
+import { useMedicalRecords } from "@/hooks/use-medical-records";
 
 const allergySchema = z.object({
     allergyName: z.string().min(1, "نام آلرژی الزامی است"),
@@ -57,6 +58,8 @@ export default function PatientDetailPage() {
         reset,
         formState: { errors },
     } = useForm<AllergyFormValues>({ resolver: zodResolver(allergySchema) });
+
+    const { data: medicalRecords, isLoading: loadingRecords } = useMedicalRecords(id);
 
     const onSubmit = (values: AllergyFormValues) => {
         addAllergy.mutate(values, {
@@ -172,6 +175,45 @@ export default function PatientDetailPage() {
                                 </div>
                             ))
                         )}
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>تاریخچهٔ پزشکی</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {loadingRecords && <p className="text-sm text-muted-foreground">در حال بارگذاری...</p>}
+                        {medicalRecords?.length === 0 && (
+                            <p className="text-sm text-muted-foreground">سابقهٔ پزشکی ثبت‌شده‌ای وجود ندارد.</p>
+                        )}
+                        {medicalRecords?.map((record) => (
+                            <div key={record.id} className="rounded-md border p-4">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-sm font-medium">
+                                        ویزیت {record.visitDate} — دکتر {record.doctorName}
+                                    </p>
+                                </div>
+                                <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                                    <p><span className="text-muted-foreground">علائم:</span> {record.symptoms}</p>
+                                    <p><span className="text-muted-foreground">تشخیص:</span> {record.diagnosis}</p>
+                                </div>
+                                {record.vitalSigns && (
+                                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                                        {record.vitalSigns.temperature != null && <span>دما: {record.vitalSigns.temperature}°C</span>}
+                                        {record.vitalSigns.heartRate != null && <span>ضربان قلب: {record.vitalSigns.heartRate}</span>}
+                                        {record.vitalSigns.bloodPressureSystolic != null && (
+                                            <span>
+                                                فشار خون: {record.vitalSigns.bloodPressureSystolic}/{record.vitalSigns.bloodPressureDiastolic}
+                                            </span>
+                                        )}
+                                        {record.vitalSigns.weightKg != null && <span>وزن: {record.vitalSigns.weightKg} kg</span>}
+                                    </div>
+                                )}
+                                {record.notes && (
+                                    <p className="mt-2 text-sm text-muted-foreground">یادداشت: {record.notes}</p>
+                                )}
+                            </div>
+                        ))}
                     </CardContent>
                 </Card>
             </div>

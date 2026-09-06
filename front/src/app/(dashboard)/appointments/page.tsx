@@ -115,6 +115,13 @@ export default function AppointmentsPage() {
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             )}
+                                            {appt.status === "CheckedIn" && (
+                                                <Link href={`/appointments/${appt.id}/complete`}>
+                                                    <Button size="sm" variant="secondary">
+                                                        تکمیل ویزیت
+                                                    </Button>
+                                                </Link>
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 );
