@@ -55,4 +55,21 @@ public static class IdentitySeeder
             await context.SaveChangesAsync(default);
         }
     }
+
+    public static async Task SeedMedicinesAsync(IApplicationDbContext context)
+    {
+        if (!context.Medicines.Any())
+        {
+            var medicines = new[]
+            {
+                new Medicine { Name = "پاراستامول", GenericName = "Paracetamol", Form = "قرص" },
+                new Medicine { Name = "ایبوپروفن", GenericName = "Ibuprofen", Form = "کپسول" },
+                new Medicine { Name = "آموکسی‌سیلین", GenericName = "Amoxicillin", Form = "کپسول" },
+                new Medicine { Name = "سیتریزین", GenericName = "Cetirizine", Form = "قرص" },
+                new Medicine { Name = "متفورمین", GenericName = "Metformin", Form = "قرص" }
+            };
+            context.Medicines.AddRange(medicines);
+            await context.SaveChangesAsync(default);
+        }
+    }
 }

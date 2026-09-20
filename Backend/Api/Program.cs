@@ -106,6 +106,7 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
     var dbContext = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
     await IdentitySeeder.SeedSpecialtiesAsync(dbContext);
+    await IdentitySeeder.SeedMedicinesAsync(dbContext);
 }
 
 app.UseCors("AllowFrontend");
