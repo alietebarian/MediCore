@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { usePatientDetail, useAddAllergy, useRemoveAllergy } from "@/hooks/use-patients";
 import { useMedicalRecords } from "@/hooks/use-medical-records";
+import { MedicalRecordPrescriptions } from "@/components/patients/medical-record-prescriptions";
 
 const allergySchema = z.object({
     allergyName: z.string().min(1, "نام آلرژی الزامی است"),
@@ -212,6 +213,7 @@ export default function PatientDetailPage() {
                                 {record.notes && (
                                     <p className="mt-2 text-sm text-muted-foreground">یادداشت: {record.notes}</p>
                                 )}
+                                <MedicalRecordPrescriptions medicalRecordId={record.id} />
                             </div>
                         ))}
                     </CardContent>
