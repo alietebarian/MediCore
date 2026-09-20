@@ -1,6 +1,7 @@
 ﻿using Application.Appointments.Queries.GetAppointments;
 using Application.Clinics.Queries.GetClinics;
 using Application.MedicalRecords.Queries.GetMedicalRecordsByPatient;
+using Application.Prescriptions.Queries.GetPrescriptionsByMedicalRecord;
 using Application.Specialties.Queries.GetSpecialties;
 using AutoMapper;
 using Domain.Entities;
@@ -22,6 +23,10 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.Doctor.FullName))
             .ForMember(dest => dest.VisitDate, opt => opt.MapFrom(src => src.Appointment.Date))
             .ForMember(dest => dest.VitalSigns, opt => opt.MapFrom(src => src.VitalSigns));
+
+        CreateMap<Prescription, PrescriptionDto>()
+            .ForMember(dest => dest.MedicineName, opt => opt.MapFrom(src => src.Medicine.Name))
+            .ForMember(dest => dest.MedicineForm, opt => opt.MapFrom(src => src.Medicine.Form));
 
         CreateMap<VitalSigns, VitalSignsResponseDto>();
     }
