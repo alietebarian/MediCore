@@ -7,7 +7,7 @@ namespace Api.Controllers;
 
 [Route("api/medical-records")]
 [ApiController]
-[Authorize(Roles ="Doctor")]
+[Authorize(Roles = "Doctor,SuperAdmin")]
 public class MedicalRecordsController : ControllerBase
 {
     private readonly IMediator _mediator;
